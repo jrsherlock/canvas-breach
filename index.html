@@ -33,6 +33,16 @@
   #q:focus { border-color: var(--accent); }
   .count { color: var(--muted); font-size: 13px; min-width: 110px; text-align: right; }
   .count strong { color: var(--text); }
+  button.copy {
+    padding: 12px 16px; font-size: 14px; font-weight: 500;
+    background: var(--panel); color: var(--text);
+    border: 1px solid var(--border); border-radius: 10px;
+    cursor: pointer; transition: all .15s; white-space: nowrap;
+  }
+  button.copy:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+  button.copy:active:not(:disabled) { transform: translateY(1px); }
+  button.copy:disabled { opacity: .4; cursor: not-allowed; }
+  button.copy.copied { border-color: #4ade80; color: #4ade80; }
   ul.results {
     list-style: none; margin: 0; padding: 0;
     border: 1px solid var(--border); border-radius: 10px;
@@ -60,6 +70,7 @@
 </header>
 <div class="search-row">
   <input id="q" type="text" placeholder="Search e.g. &quot;university&quot;, &quot;texas&quot;, &quot;county&quot;&hellip;" autofocus autocomplete="off" spellcheck="false">
+  <button id="copy" class="copy" type="button" title="Copy all matching names to clipboard">Copy</button>
   <div class="count"><strong id="n">0</strong> matches</div>
 </div>
 <ul id="results" class="results"></ul>
@@ -74,6 +85,8 @@ const RESULT_LIMIT = 500;
 const q = document.getElementById('q');
 const resultsEl = document.getElementById('results');
 const nEl = document.getElementById('n');
+const copyBtn = document.getElementById('copy');
+let currentMatches = [];
 document.getElementById('total').textContent = NAMES.length.toLocaleString();
 
 function escapeHtml(s) {
@@ -98,7 +111,9 @@ function render(term) {
       if (NAMES[i].toLowerCase().includes(t)) matches.push(NAMES[i]);
     }
   }
+  currentMatches = matches;
   nEl.textContent = matches.length.toLocaleString();
+  copyBtn.disabled = matches.length === 0;
   if (matches.length === 0) {
     resultsEl.innerHTML = '<li class="empty">No matches</li>';
     return;
@@ -119,6 +134,34 @@ q.addEventListener('input', () => {
   clearTimeout(timer);
   timer = setTimeout(() => render(q.value), 60);
 });
+
+let copyResetTimer;
+async function copyResults() {
+  if (!currentMatches.length) return;
+  const text = currentMatches.join('\n');
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch (e) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  }
+  const original = 'Copy';
+  copyBtn.textContent = 'Copied ' + currentMatches.length.toLocaleString();
+  copyBtn.classList.add('copied');
+  clearTimeout(copyResetTimer);
+  copyResetTimer = setTimeout(() => {
+    copyBtn.textContent = original;
+    copyBtn.classList.remove('copied');
+  }, 1500);
+}
+copyBtn.addEventListener('click', copyResults);
+
 render('');
 </script>
 </body>
