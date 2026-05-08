@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>Canvas / Instructure Breach Customer Lookup &middot; ProCircular</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Search the 8,790 education institutions named in the ShinyHunters Instructure / Canvas data leak. Provided by ProCircular &mdash; incident response, vCISO, and security services for higher ed and K-12.">
+<meta name="description" content="Search the 8,809 education institutions named by ShinyHunters in the April 2026 Instructure / Canvas breach. Confirmed exposed: names, emails, student IDs, user messages. Provided by ProCircular &mdash; incident response for higher ed and K-12.">
 <meta name="theme-color" content="#1F3D6B">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -229,6 +229,23 @@
   .action-panel ol li::marker { color: var(--pc-green); font-weight: 700; }
   .action-panel ol li strong { color: var(--pc-green); font-weight: 700; }
   .action-panel ol li span { color: rgba(255,255,255,.78); }
+  .action-panel .ap-warning {
+    margin: 0 0 18px; padding: 14px 16px;
+    background: rgba(149,201,61,.08);
+    border-left: 3px solid var(--pc-green);
+    border-radius: 0 8px 8px 0;
+    color: rgba(255,255,255,.9); font-size: 13.5px; line-height: 1.6;
+  }
+  .action-panel .ap-warning strong { color: #fff; font-weight: 700; }
+  .action-panel .ap-warning .stop {
+    color: var(--pc-green); font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.4px; font-size: 13px;
+  }
+  .action-panel h4 {
+    margin: 22px 0 12px; font-size: 16px; font-weight: 700;
+    color: var(--pc-green); letter-spacing: 0.2px;
+    text-transform: uppercase; font-size: 13px;
+  }
   .action-panel .cta-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
   .action-panel .ap-hotline {
     color: rgba(255,255,255,.85); font-size: 13px; padding-left: 4px;
@@ -278,7 +295,7 @@
     </a>
     <div class="brand-cta">
       <a class="btn ghost-navy" href="https://www.procircular.com/products-and-services/incident-response/" target="_blank" rel="noopener">Incident Response</a>
-      <a class="btn primary" href="https://www.procircular.com/contact-us/" target="_blank" rel="noopener">Contact Us &rarr;</a>
+      <a class="btn primary" href="https://info.procircular.com/en-us/canvas-breach-response-support" target="_blank" rel="noopener">Get Canvas Breach Support &rarr;</a>
     </div>
   </div>
 </div>
@@ -286,42 +303,69 @@
 <div class="wrap">
 
 <header class="hero">
-  <span class="eyebrow">ShinyHunters Data Leak &middot; Education Sector</span>
-  <h1>Canvas / Instructure Breach <span class="accent">Customer Lookup</span></h1>
+  <span class="eyebrow">ShinyHunters Data Leak &middot; Instructure / Canvas LMS</span>
+  <h1>Canvas Breach <span class="accent">Customer Lookup</span></h1>
   <div class="lede">
-    Search the <strong>8,790 education institutions</strong> named in the ShinyHunters Instructure / Canvas
-    data-leak post &mdash; universities, K&ndash;12 districts, community colleges, and corporate training tenants.
-    Type any part of a name; results filter as you type. <strong>Local-only:</strong> nothing you type is sent anywhere.
+    Search the list of <strong>8,809 education institutions</strong> ShinyHunters named on their leak site
+    after the April&nbsp;2026 Instructure / Canvas breach &mdash; the LMS used by <strong>roughly 41% of
+    higher-education institutions in North America</strong> and thousands of K&ndash;12 districts. Instructure
+    has confirmed that <strong>names, email addresses, student ID numbers, and user-to-user messages</strong>
+    were exposed.
+    <br><br>
+    The list comes from the threat actor and is <strong>not 100% reliable</strong> &mdash; treat a hit as a
+    trigger to investigate, not a finding of fact. Type any part of a name; results filter as you type.
+    <strong>Local-only:</strong> nothing you type is sent anywhere.
   </div>
 
   <details class="briefing">
-    <summary>About this incident &mdash; timeline, scope, and what was leaked</summary>
+    <summary>About this incident &mdash; timeline, scope, and the extortion risk</summary>
     <div class="briefing-body">
-      <p>
-        In early 2026 the threat-actor group <strong>ShinyHunters</strong> published a list of customer
-        tenants on their data-leak site (DLS) that they claim to have exfiltrated from
-        <strong>Instructure</strong>, the company behind the Canvas Learning Management System used by
-        thousands of universities, K&ndash;12 districts, community colleges, and corporate training programs
-        worldwide.
-      </p>
-      <p>According to the threat actor's posting:</p>
+      <p><strong>Timeline.</strong></p>
       <ul>
-        <li>The list names <strong>~8,790 distinct Canvas tenants</strong> across higher ed, K&ndash;12, government, and private training.</li>
-        <li>ShinyHunters states the data was published because the victim org "did not pay a ransom or cooperate."</li>
-        <li>Affected institutions span the United States, Canada, the UK, Australia, the Nordics, Latin America, the Middle East, and Asia.</li>
+        <li><strong>April 30, 2026.</strong> Instructure detected a service disruption that turned out to be a cybersecurity incident.</li>
+        <li><strong>May 1, 2026.</strong> Instructure confirmed an attacker had exploited a vulnerability in its cloud environment to access APIs and privileged credentials. The vulnerability has since been patched, application keys rotated, and customers required to re-authorize their integrations.</li>
+        <li><strong>May 3, 2026.</strong> ShinyHunters &mdash; a financially motivated cybercrime group also tied to prior attacks on Ticketmaster, AT&amp;T, and Snowflake customers &mdash; claimed responsibility on a leak site and published a list of <strong>8,809 affected institutions</strong>. Major universities including Penn, Duke, and Michigan have publicly confirmed they appear on the list.</li>
       </ul>
+
+      <p><strong>What Instructure has confirmed exposed:</strong></p>
+      <ul>
+        <li>Names</li>
+        <li>Email addresses</li>
+        <li>Student ID numbers</li>
+        <li>User-to-user messages</li>
+      </ul>
+
+      <p><strong>What Instructure has stated was NOT involved:</strong> passwords, dates of birth, government identifiers, financial information.</p>
+
       <p>
-        <strong>Important caveats.</strong> Inclusion in the list is the threat actor's claim, not independent
-        confirmation that an institution's user data has been published or that any specific record was
-        exfiltrated. Treat a hit on this list as a <strong>trigger to investigate</strong>, not a finding of
-        fact. Always corroborate against Instructure's official advisories, your own Canvas audit logs, and
-        qualified incident-response counsel before notifying users or regulators.
+        <strong>Unverified threat-actor claims.</strong> ShinyHunters' bigger claims &mdash; 275 million records,
+        3.65 terabytes of data, and a separate breach of Instructure's Salesforce instance &mdash; remain
+        unverified and are almost certainly inflated for extortion leverage.
+      </p>
+
+      <p>
+        <strong>Why direct extortion of individual schools is the real risk.</strong> Canvas is multi-tenant
+        SaaS &mdash; every institution's data lives in shared infrastructure but is logically segmented by tenant,
+        and the actor's already-published per-institution record counts confirm the dataset has been sliced by
+        school. The <strong>PowerSchool</strong> incident from late 2024 is the direct precedent: after PowerSchool
+        paid a $2.85 million ransom and received what was supposed to be proof of data deletion, the threat
+        actor turned around in May 2025 and started emailing individual school districts directly demanding
+        additional payments. Districts in North Carolina, the Toronto District School Board, and others
+        received "pay or leak" emails &mdash; some signed "ShinyHunters."
       </p>
       <p>
-        <strong>Data source.</strong> Names were extracted verbatim from the public DLS text file. Some
-        accented characters (Swedish, Spanish, Portuguese) appear as <code>?</code> due to upstream encoding
-        artifacts. Internal/test tenants (e.g. <em>Root</em>, <em>Unit Canvas</em>) are retained for fidelity
-        to the source.
+        <strong>Expect the same pattern</strong> against Canvas institutions over the coming weeks, including
+        bluffs from imitators trying their luck with the public list. Authenticity verification of any data
+        sample is the first response. <strong>Do not negotiate, do not pay, do not engage</strong> without
+        third-party triage.
+      </p>
+
+      <p>
+        <strong>Caveats on this list.</strong> The 8,809 names are from the threat actor and are not 100%
+        reliable. Inclusion is not independent confirmation that an institution's user data was successfully
+        exfiltrated &mdash; treat it as a trigger to investigate. Names were extracted verbatim from the public
+        DLS text file (8,790 unique entries here after deduplication); some Swedish, Spanish, and Portuguese
+        accented characters render as <code>?</code> due to upstream encoding artifacts.
       </p>
     </div>
   </details>
@@ -338,23 +382,55 @@
 <div id="action-panel" class="action-panel" role="region" aria-live="polite">
   <div class="action-panel-inner">
     <div class="ap-eyebrow">Found Your Institution?</div>
-    <h3>Here's what to do in the next 24&ndash;72 hours.</h3>
+    <h3>Here's what your institution should be doing now.</h3>
     <p class="ap-lede">
-      A name appearing on the leak list is a credible signal that your Canvas tenant
-      may have been compromised. ProCircular's incident-response team has helped dozens
-      of education institutions through breaches like this. Recommended first steps:
+      A name on the ShinyHunters list is a credible trigger to act. The exposure most
+      institutions aren't planning for is <strong>direct extortion of individual schools</strong>
+      &mdash; the same pattern that hit K&ndash;12 districts after the PowerSchool incident.
     </p>
+
+    <div class="ap-warning">
+      <span class="stop">Critical:</span> Expect "pay or leak" emails sent directly to your
+      institution &mdash; including bluffs from imitators trying their luck with the public list.
+      <strong>Do not negotiate, do not pay, do not engage</strong> without third-party triage and
+      authenticity verification of any data sample.
+    </div>
+
+    <h4>Three actions to take now</h4>
     <ol>
-      <li><strong>Preserve evidence.</strong> <span>Snapshot Canvas audit logs, API access logs, and admin activity. Don't let log retention windows lapse.</span></li>
-      <li><strong>Rotate credentials &amp; tokens.</strong> <span>Force-rotate admin passwords, API tokens, OAuth/LTI keys, and any service-account credentials integrated with Canvas.</span></li>
-      <li><strong>Convene incident counsel.</strong> <span>Engage privacy counsel early &mdash; FERPA, state breach-notification laws (50 different clocks), and student/parent comms have tight timelines.</span></li>
-      <li><strong>Confirm scope with Instructure.</strong> <span>Open a Severity 1 case. Request their forensic findings specific to your tenant, not just the public statement.</span></li>
-      <li><strong>Plan stakeholder comms.</strong> <span>Board, leadership, students, parents, faculty, the press &mdash; sequenced, factual, on your timeline (not the attacker's).</span></li>
+      <li>
+        <strong>Audit your Canvas tenant for persistence.</strong>
+        <span>
+          Look for unfamiliar admin accounts, developer keys, LTI tools, and webhook
+          subscriptions. Instructure's central credential rotation does <strong>not</strong>
+          cover persistence mechanisms inside your tenant.
+        </span>
+      </li>
+      <li>
+        <strong>Establish an extortion-email escalation path before one arrives.</strong>
+        <span>
+          Decide in advance who receives it, who they call, and the standing rule that
+          you do not negotiate, pay, or respond without third-party verification.
+        </span>
+      </li>
+      <li>
+        <strong>Brief help desk and faculty on elevated phishing risk.</strong>
+        <span>
+          Stolen names, institutional email addresses, and course context make for
+          very convincing impersonation &mdash; against students, parents, and staff alike.
+        </span>
+      </li>
     </ol>
+
+    <p class="ap-lede" style="margin-top:6px">
+      ProCircular is supporting affected education customers with <strong>incident response,
+      Canvas tenant audits, and extortion triage</strong>. Reach out to your account team or
+      contact us directly.
+    </p>
+
     <div class="cta-row">
-      <a class="btn primary" href="https://www.procircular.com/contact-us/" target="_blank" rel="noopener">Talk to ProCircular IR &rarr;</a>
-      <a class="btn ghost-light" href="https://www.procircular.com/products-and-services/incident-response/" target="_blank" rel="noopener">Our IR Services</a>
-      <span class="ap-hotline">or call our 24/7 hotline: <a href="tel:+18443977763">844-397-7763</a></span>
+      <a class="btn primary" href="https://info.procircular.com/en-us/canvas-breach-response-support" target="_blank" rel="noopener">Get Canvas Breach Support &rarr;</a>
+      <span class="ap-hotline">or call the 24/7 IR hotline: <a href="tel:+18443977763">844-397-7763</a></span>
     </div>
   </div>
 </div>
@@ -366,9 +442,10 @@
     and risk assessments for education, healthcare, and finance.
   </div>
   <div>
-    Data source: ShinyHunters DLS leak file (publicly posted). List contains
-    <strong id="total">0</strong> entries. This page is informational and does not host or link to
-    leaked data. If you believe an entry should be removed,
+    Data source: ShinyHunters DLS leak file (publicly posted, claimed 8,809 institutions).
+    Searchable here: <strong id="total">0</strong> unique entries after deduplication.
+    This page is informational and does not host or link to leaked data.
+    If you believe an entry should be removed,
     <a href="https://github.com/jrsherlock/canvas-breach/issues" target="_blank" rel="noopener">open an issue</a>.
   </div>
 </div>
