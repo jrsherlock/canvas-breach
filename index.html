@@ -4,186 +4,301 @@
 <meta charset="UTF-8">
 <title>Canvas / Instructure Breach Customer Lookup &middot; ProCircular</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Search the 8,790 education institutions named in the ShinyHunters Instructure / Canvas data leak. Provided by ProCircular &mdash; incident response and security for higher ed and K-12.">
-<meta name="theme-color" content="#0f1117">
+<meta name="description" content="Search the 8,790 education institutions named in the ShinyHunters Instructure / Canvas data leak. Provided by ProCircular &mdash; incident response, vCISO, and security services for higher ed and K-12.">
+<meta name="theme-color" content="#1F3D6B">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0f1117;
-    --panel: #161922;
-    --panel-2: #1c2030;
-    --border: #262b38;
-    --text: #e6e8ee;
-    --muted: #8a93a6;
-    --accent: #ff6b4a;
-    --accent-2: #ff8d6b;
-    --accent-soft: rgba(255,107,74,.15);
-    --hit: #ffd166;
-    --warn: #ffd166;
-    --warn-soft: rgba(255, 209, 102, .08);
-    --ok: #4ade80;
+    /* ProCircular brand */
+    --pc-navy: #1F3D6B;
+    --pc-navy-dark: #15294A;
+    --pc-navy-deep: #0F2447;
+    --pc-green: #95C93D;        /* signature lime — headlines & accents */
+    --pc-green-dark: #7AAA2C;
+    --pc-green-button: #5BAB3E; /* button green (slightly darker) */
+    --pc-green-button-hover: #4A9530;
+
+    /* Surface */
+    --bg: #FFFFFF;
+    --panel: #F8FAFC;
+    --panel-2: #EEF2F7;
+    --border: #E2E8F0;
+    --border-strong: #CBD5E1;
+
+    /* Text */
+    --text: #1F2937;
+    --text-soft: #374151;
+    --muted: #6B7280;
+    --muted-light: #9CA3AF;
+
+    /* Status */
+    --warn-bg: #FFF7E6;
+    --warn-border: #FFE0A3;
+    --warn-text: #92590A;
   }
   * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    -webkit-font-smoothing: antialiased; }
-  a { color: var(--accent); text-decoration: none; }
+  html, body {
+    margin: 0; padding: 0; background: var(--bg); color: var(--text);
+    font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased; line-height: 1.5;
+  }
+  a { color: var(--pc-navy); text-decoration: none; }
   a:hover { text-decoration: underline; }
-  .wrap { max-width: 920px; margin: 0 auto; padding: 24px 20px 80px; }
 
-  /* ProCircular brand bar */
+  /* ===== Top hotline strip (mirrors procircular.com) ===== */
+  .hotline-strip {
+    background: var(--pc-navy); color: #fff; text-align: center;
+    padding: 11px 16px; font-size: 14px; font-weight: 500; letter-spacing: 0.1px;
+  }
+  .hotline-strip a { color: #fff; text-decoration: underline; font-weight: 700; white-space: nowrap; }
+  .hotline-strip a:hover { color: var(--pc-green); }
+
+  /* ===== Brand bar ===== */
   .brandbar {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 0; border-bottom: 1px solid var(--border); margin-bottom: 28px;
-    gap: 16px; flex-wrap: wrap;
+    background: var(--pc-navy);
+    border-bottom: 4px solid var(--pc-green);
   }
-  .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+  .brandbar-inner {
+    max-width: 1100px; margin: 0 auto; padding: 18px 20px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  }
+  .brand { display: flex; align-items: center; text-decoration: none; gap: 12px; }
   .brand:hover { text-decoration: none; }
-  .brand-mark {
-    width: 32px; height: 32px; border-radius: 8px;
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 700; color: #1a0e08; font-size: 15px; letter-spacing: -0.5px;
+  .brand img.logo { height: 38px; width: auto; display: block; }
+  .brand .logo-fallback {
+    color: #fff; font-weight: 700; font-size: 22px; letter-spacing: -0.5px;
+    display: none;
   }
-  .brand-text { display: flex; flex-direction: column; line-height: 1.15; }
-  .brand-name { color: var(--text); font-weight: 600; font-size: 15px; }
-  .brand-tag { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; }
-  .brand-cta { display: flex; gap: 10px; align-items: center; }
+  .brand img.logo.failed + .logo-fallback { display: block; }
+  .brand-cta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
   .btn {
     display: inline-flex; align-items: center; gap: 6px;
-    padding: 9px 14px; font-size: 13px; font-weight: 500;
-    border-radius: 8px; border: 1px solid var(--border);
-    background: transparent; color: var(--text); cursor: pointer;
+    padding: 10px 18px; font-size: 13px; font-weight: 600;
+    border-radius: 999px; border: 2px solid transparent;
+    background: transparent; color: #fff; cursor: pointer;
     text-decoration: none; transition: all .15s; white-space: nowrap;
+    font-family: inherit; line-height: 1.2;
   }
-  .btn:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+  .btn.ghost-light { border-color: rgba(255,255,255,.5); color: #fff; }
+  .btn.ghost-light:hover { border-color: #fff; background: rgba(255,255,255,.08); text-decoration: none; }
   .btn.primary {
-    background: var(--accent); border-color: var(--accent); color: #1a0e08; font-weight: 600;
+    background: var(--pc-green-button); border-color: var(--pc-green-button); color: #fff;
   }
-  .btn.primary:hover { background: var(--accent-2); border-color: var(--accent-2); color: #1a0e08; }
+  .btn.primary:hover {
+    background: var(--pc-green-button-hover); border-color: var(--pc-green-button-hover);
+    color: #fff; text-decoration: none;
+  }
+  .btn.outline-navy {
+    border-color: var(--pc-navy); color: var(--pc-navy); background: #fff;
+  }
+  .btn.outline-navy:hover { background: var(--pc-navy); color: #fff; text-decoration: none; }
 
-  header.hero { margin-bottom: 22px; }
-  h1 { font-size: 24px; margin: 0 0 8px; font-weight: 600; letter-spacing: -0.2px; }
-  .sub { color: var(--muted); font-size: 14px; line-height: 1.55; }
-  .sub a { color: var(--accent); }
+  /* ===== Page wrap ===== */
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 36px 20px 80px; }
 
-  /* Briefing accordion */
+  /* ===== Hero ===== */
+  header.hero { margin-bottom: 28px; }
+  .eyebrow {
+    display: inline-block; color: var(--pc-green-dark); font-weight: 700;
+    font-size: 12px; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 10px;
+  }
+  h1 {
+    font-size: 34px; line-height: 1.15; margin: 0 0 12px;
+    font-weight: 700; color: var(--pc-navy); letter-spacing: -0.4px;
+  }
+  h1 .accent { color: var(--pc-green-dark); }
+  .lede { color: var(--text-soft); font-size: 16px; line-height: 1.6; max-width: 760px; }
+  .lede strong { color: var(--text); font-weight: 700; }
+
+  /* ===== Briefing accordion ===== */
   details.briefing {
-    margin: 16px 0 0; background: var(--panel); border: 1px solid var(--border);
-    border-radius: 10px; padding: 0; overflow: hidden;
+    margin: 22px 0 0; background: var(--panel); border: 1px solid var(--border);
+    border-radius: 12px; padding: 0; overflow: hidden;
   }
   details.briefing summary {
-    cursor: pointer; padding: 14px 16px; font-size: 14px; font-weight: 500;
-    color: var(--text); list-style: none; display: flex; align-items: center; gap: 8px;
+    cursor: pointer; padding: 16px 20px; font-size: 15px; font-weight: 600;
+    color: var(--pc-navy); list-style: none; display: flex; align-items: center; gap: 10px;
   }
   details.briefing summary::-webkit-details-marker { display: none; }
   details.briefing summary::before {
-    content: "▸"; color: var(--muted); font-size: 11px; transition: transform .15s;
+    content: "▸"; color: var(--pc-green-dark); font-size: 12px; transition: transform .15s;
   }
   details.briefing[open] summary::before { transform: rotate(90deg); }
-  details.briefing summary:hover { background: rgba(255,255,255,.02); }
+  details.briefing summary:hover { background: var(--panel-2); }
   .briefing-body {
-    padding: 4px 16px 18px; border-top: 1px solid var(--border);
-    color: var(--muted); font-size: 13px; line-height: 1.6;
+    padding: 6px 20px 20px; border-top: 1px solid var(--border);
+    color: var(--text-soft); font-size: 14px; line-height: 1.65;
   }
   .briefing-body p { margin: 12px 0; }
-  .briefing-body ul { margin: 8px 0 12px; padding-left: 20px; }
-  .briefing-body li { margin: 4px 0; }
+  .briefing-body ul { margin: 8px 0 12px; padding-left: 22px; }
+  .briefing-body li { margin: 5px 0; }
   .briefing-body strong { color: var(--text); }
-  .search-row { display: flex; gap: 12px; margin: 22px 0 14px; align-items: center; }
+  .briefing-body code {
+    background: var(--panel-2); padding: 1px 5px; border-radius: 4px;
+    font-size: 13px; color: var(--text);
+  }
+
+  /* ===== Search row ===== */
+  .search-row {
+    display: flex; gap: 12px; margin: 28px 0 14px;
+    align-items: center; flex-wrap: wrap;
+  }
   #q {
-    flex: 1; padding: 14px 16px; font-size: 16px;
-    background: var(--panel); color: var(--text);
-    border: 1px solid var(--border); border-radius: 10px; outline: none;
-    transition: border-color .15s;
+    flex: 1; min-width: 240px; padding: 14px 18px; font-size: 16px;
+    background: #fff; color: var(--text); font-family: inherit;
+    border: 2px solid var(--border-strong); border-radius: 10px; outline: none;
+    transition: border-color .15s, box-shadow .15s;
   }
-  #q:focus { border-color: var(--accent); }
-  .count { color: var(--muted); font-size: 13px; min-width: 110px; text-align: right; }
-  .count strong { color: var(--text); }
+  #q:focus { border-color: var(--pc-green-dark); box-shadow: 0 0 0 4px rgba(149,201,61,.15); }
+  #q::placeholder { color: var(--muted-light); }
   button.copy {
-    padding: 12px 16px; font-size: 14px; font-weight: 500;
-    background: var(--panel); color: var(--text);
-    border: 1px solid var(--border); border-radius: 10px;
-    cursor: pointer; transition: all .15s; white-space: nowrap;
+    padding: 13px 20px; font-size: 14px; font-weight: 600;
+    background: #fff; color: var(--pc-navy);
+    border: 2px solid var(--border-strong); border-radius: 10px;
+    cursor: pointer; transition: all .15s; white-space: nowrap; font-family: inherit;
   }
-  button.copy:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+  button.copy:hover:not(:disabled) {
+    border-color: var(--pc-navy); color: var(--pc-navy); background: var(--panel);
+  }
   button.copy:active:not(:disabled) { transform: translateY(1px); }
   button.copy:disabled { opacity: .4; cursor: not-allowed; }
-  button.copy.copied { border-color: #4ade80; color: #4ade80; }
+  button.copy.copied { border-color: var(--pc-green-button); color: var(--pc-green-button); background: #fff; }
+  .count {
+    color: var(--muted); font-size: 13px; min-width: 110px;
+    text-align: right; font-weight: 500;
+  }
+  .count strong { color: var(--pc-navy); font-weight: 700; }
+
+  /* ===== Results list ===== */
   ul.results {
     list-style: none; margin: 0; padding: 0;
-    border: 1px solid var(--border); border-radius: 10px;
-    background: var(--panel); max-height: 70vh; overflow-y: auto;
+    border: 1px solid var(--border); border-radius: 12px;
+    background: #fff; max-height: 70vh; overflow-y: auto;
+    box-shadow: 0 1px 3px rgba(15,36,71,.04);
   }
   ul.results li {
-    padding: 10px 16px; border-bottom: 1px solid var(--border);
-    font-size: 14px; line-height: 1.4;
+    padding: 11px 18px; border-bottom: 1px solid var(--border);
+    font-size: 14px; line-height: 1.45; color: var(--text);
   }
   ul.results li:last-child { border-bottom: none; }
-  ul.results li:hover { background: rgba(255,255,255,.02); }
-  mark { background: var(--accent-soft); color: var(--hit); padding: 0 2px; border-radius: 3px; }
-  .empty { padding: 24px; color: var(--muted); text-align: center; font-size: 14px; }
+  ul.results li:hover { background: var(--panel); }
+  mark {
+    background: rgba(149,201,61,.28); color: var(--pc-navy-dark);
+    padding: 0 3px; border-radius: 3px; font-weight: 600;
+  }
+  .empty { padding: 28px; color: var(--muted); text-align: center; font-size: 14px; }
 
-  /* Reactive action panel — appears when user finds a match */
+  /* ===== Reactive IR action panel — uses ProCircular navy + green ===== */
   .action-panel {
-    margin-top: 18px; padding: 20px 22px; border-radius: 12px;
-    background: var(--warn-soft); border: 1px solid rgba(255, 209, 102, .25);
-    display: none;
+    margin-top: 22px; padding: 0; border-radius: 14px;
+    background: var(--pc-navy); color: #fff;
+    overflow: hidden; display: none;
+    box-shadow: 0 8px 24px rgba(15,36,71,.18);
   }
   .action-panel.visible { display: block; animation: fadeIn .25s ease-out; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
-  .action-panel h3 {
-    margin: 0 0 6px; font-size: 16px; font-weight: 600; color: var(--warn);
-    display: flex; align-items: center; gap: 8px;
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .action-panel-inner { padding: 28px 30px 26px; position: relative; }
+  .action-panel-inner::before {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+    background: var(--pc-green);
   }
-  .action-panel h3::before { content: "⚠"; font-size: 18px; }
-  .action-panel .lede { margin: 0 0 14px; font-size: 13px; color: var(--text); line-height: 1.55; }
-  .action-panel ol { margin: 0 0 16px; padding-left: 22px; color: var(--text); font-size: 13px; line-height: 1.65; }
-  .action-panel ol li { margin: 6px 0; }
-  .action-panel ol li strong { color: var(--text); font-weight: 600; }
-  .action-panel ol li span { color: var(--muted); }
-  .action-panel .cta-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .action-panel .ap-eyebrow {
+    color: var(--pc-green); font-size: 12px; font-weight: 700;
+    letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 8px;
+  }
+  .action-panel h3 {
+    margin: 0 0 10px; font-size: 22px; font-weight: 700; color: #fff;
+    letter-spacing: -0.2px; line-height: 1.25;
+  }
+  .action-panel .ap-lede {
+    margin: 0 0 18px; font-size: 14px; color: rgba(255,255,255,.85); line-height: 1.6;
+    max-width: 760px;
+  }
+  .action-panel ol {
+    margin: 0 0 22px; padding-left: 22px;
+    color: #fff; font-size: 14px; line-height: 1.65;
+  }
+  .action-panel ol li { margin: 8px 0; }
+  .action-panel ol li::marker { color: var(--pc-green); font-weight: 700; }
+  .action-panel ol li strong { color: var(--pc-green); font-weight: 700; }
+  .action-panel ol li span { color: rgba(255,255,255,.78); }
+  .action-panel .cta-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .action-panel .ap-hotline {
+    color: rgba(255,255,255,.85); font-size: 13px; padding-left: 4px;
+  }
+  .action-panel .ap-hotline a {
+    color: #fff; text-decoration: underline; font-weight: 700;
+  }
+  .action-panel .ap-hotline a:hover { color: var(--pc-green); }
 
-  /* Footer */
-  .footer { margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border);
-    font-size: 12px; color: var(--muted); line-height: 1.6; }
-  .footer a { color: var(--muted); text-decoration: underline; }
-  .footer a:hover { color: var(--accent); }
-  .footer .pc-line { color: var(--text); margin-bottom: 6px; font-size: 13px; }
+  /* ===== Footer ===== */
+  .footer {
+    margin-top: 36px; padding-top: 22px; border-top: 1px solid var(--border);
+    font-size: 12.5px; color: var(--muted); line-height: 1.65;
+  }
+  .footer a { color: var(--pc-navy); text-decoration: underline; }
+  .footer a:hover { color: var(--pc-green-dark); }
+  .footer .pc-line { color: var(--text-soft); margin-bottom: 8px; font-size: 13.5px; }
+  .footer .pc-line strong { color: var(--pc-navy); }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 640px) {
+    h1 { font-size: 26px; }
+    .lede { font-size: 14.5px; }
+    .brandbar-inner { padding: 14px 16px; }
+    .brand img.logo { height: 32px; }
+    .wrap { padding: 24px 16px 60px; }
+    .action-panel-inner { padding: 22px 22px 22px 26px; }
+    .action-panel h3 { font-size: 18px; }
+    .hotline-strip { font-size: 13px; padding: 10px 14px; }
+    .count { min-width: auto; text-align: left; flex-basis: 100%; }
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
+
+<div class="hotline-strip">
+  Need Incident or Breach Response Assistance?
+  Call our Hotline at <a href="tel:+18443977763">844-397-7763</a>
+</div>
 
 <div class="brandbar">
-  <a class="brand" href="https://procircular.com" target="_blank" rel="noopener">
-    <div class="brand-mark">PC</div>
-    <div class="brand-text">
-      <span class="brand-name">ProCircular</span>
-      <span class="brand-tag">Cybersecurity for Education</span>
+  <div class="brandbar-inner">
+    <a class="brand" href="https://www.procircular.com" target="_blank" rel="noopener" aria-label="ProCircular">
+      <img class="logo" src="https://www.procircular.com/wp-content/uploads/2025/04/ProCircular-Logo-White.png"
+        alt="ProCircular" onerror="this.classList.add('failed')">
+      <span class="logo-fallback">ProCircular</span>
+    </a>
+    <div class="brand-cta">
+      <a class="btn ghost-light" href="https://www.procircular.com/products-and-services/incident-response/" target="_blank" rel="noopener">Incident Response</a>
+      <a class="btn primary" href="https://www.procircular.com/contact-us/" target="_blank" rel="noopener">Contact Us &rarr;</a>
     </div>
-  </a>
-  <div class="brand-cta">
-    <a class="btn" href="https://procircular.com" target="_blank" rel="noopener">procircular.com</a>
-    <a class="btn primary" href="https://procircular.com/contact-us/" target="_blank" rel="noopener">Talk to Incident Response &rarr;</a>
   </div>
 </div>
 
+<div class="wrap">
+
 <header class="hero">
-  <h1>Canvas / Instructure Breach &mdash; Customer Lookup</h1>
-  <div class="sub">
-    Search the <strong>8,790 education institutions</strong> named in the ShinyHunters Instructure / Canvas data-leak post.
-    Type any part of a name &mdash; results filter as you type. Local-only: nothing you type is sent anywhere.
+  <span class="eyebrow">ShinyHunters Data Leak &middot; Education Sector</span>
+  <h1>Canvas / Instructure Breach <span class="accent">Customer Lookup</span></h1>
+  <div class="lede">
+    Search the <strong>8,790 education institutions</strong> named in the ShinyHunters Instructure / Canvas
+    data-leak post &mdash; universities, K&ndash;12 districts, community colleges, and corporate training tenants.
+    Type any part of a name; results filter as you type. <strong>Local-only:</strong> nothing you type is sent anywhere.
   </div>
 
   <details class="briefing">
-    <summary>About this incident &mdash; timeline, scope, what was leaked</summary>
+    <summary>About this incident &mdash; timeline, scope, and what was leaked</summary>
     <div class="briefing-body">
       <p>
         In early 2026 the threat-actor group <strong>ShinyHunters</strong> published a list of customer
         tenants on their data-leak site (DLS) that they claim to have exfiltrated from
-        <strong>Instructure</strong>, the company behind the Canvas Learning Management System
-        used by thousands of universities, K&ndash;12 districts, community colleges, and
-        corporate training programs worldwide.
+        <strong>Instructure</strong>, the company behind the Canvas Learning Management System used by
+        thousands of universities, K&ndash;12 districts, community colleges, and corporate training programs
+        worldwide.
       </p>
       <p>According to the threat actor's posting:</p>
       <ul>
@@ -192,25 +307,24 @@
         <li>Affected institutions span the United States, Canada, the UK, Australia, the Nordics, Latin America, the Middle East, and Asia.</li>
       </ul>
       <p>
-        <strong>Important caveats.</strong> Inclusion in the list is the threat actor's claim,
-        not independent confirmation that an institution's user data has been published or
-        that any specific record was exfiltrated. Treat a hit on this list as a
-        <strong>trigger to investigate</strong>, not a finding of fact. Always corroborate
-        against Instructure's official advisories, your own Canvas audit logs, and qualified
-        incident-response counsel before notifying users or regulators.
+        <strong>Important caveats.</strong> Inclusion in the list is the threat actor's claim, not independent
+        confirmation that an institution's user data has been published or that any specific record was
+        exfiltrated. Treat a hit on this list as a <strong>trigger to investigate</strong>, not a finding of
+        fact. Always corroborate against Instructure's official advisories, your own Canvas audit logs, and
+        qualified incident-response counsel before notifying users or regulators.
       </p>
       <p>
-        <strong>Data source.</strong> The names were extracted verbatim from the public DLS
-        text file. Some accented characters (Swedish, Spanish, Portuguese) appear as
-        <code>?</code> due to upstream encoding artifacts. Internal/test tenants
-        (e.g. <em>Root</em>, <em>Unit Canvas</em>) are retained for fidelity.
+        <strong>Data source.</strong> Names were extracted verbatim from the public DLS text file. Some
+        accented characters (Swedish, Spanish, Portuguese) appear as <code>?</code> due to upstream encoding
+        artifacts. Internal/test tenants (e.g. <em>Root</em>, <em>Unit Canvas</em>) are retained for fidelity
+        to the source.
       </p>
     </div>
   </details>
 </header>
 
 <div class="search-row">
-  <input id="q" type="text" placeholder="Search e.g. &quot;university&quot;, &quot;texas&quot;, &quot;county&quot;&hellip;" autofocus autocomplete="off" spellcheck="false">
+  <input id="q" type="text" placeholder='Search e.g. "university", "texas", "county"&hellip;' autofocus autocomplete="off" spellcheck="false">
   <button id="copy" class="copy" type="button" title="Copy all matching names to clipboard">Copy</button>
   <div class="count"><strong id="n">0</strong> matches</div>
 </div>
@@ -218,35 +332,39 @@
 <ul id="results" class="results"></ul>
 
 <div id="action-panel" class="action-panel" role="region" aria-live="polite">
-  <h3>Found your institution? Here's what to do next.</h3>
-  <p class="lede">
-    A name appearing on the leak list is a credible signal that your Canvas tenant
-    may have been compromised. ProCircular's incident-response team has helped dozens
-    of education institutions through breaches like this. Recommended first steps:
-  </p>
-  <ol>
-    <li><strong>Preserve evidence.</strong> <span>Snapshot Canvas audit logs, API access logs, and admin activity. Do not let log retention windows lapse.</span></li>
-    <li><strong>Rotate credentials &amp; tokens.</strong> <span>Force-rotate admin passwords, API tokens, OAuth/LTI keys, and any service-account credentials integrated with Canvas.</span></li>
-    <li><strong>Convene incident counsel.</strong> <span>Engage privacy counsel early &mdash; FERPA, state breach-notification laws (50 different clocks), and student/parent comms have tight timelines.</span></li>
-    <li><strong>Confirm scope with Instructure.</strong> <span>Open a Severity 1 case. Request their forensic findings specific to your tenant, not just the public statement.</span></li>
-    <li><strong>Plan stakeholder comms.</strong> <span>Board, leadership, students, parents, faculty, the press &mdash; sequenced, factual, on your timeline (not the attacker's).</span></li>
-  </ol>
-  <div class="cta-row">
-    <a class="btn primary" href="https://procircular.com/contact-us/" target="_blank" rel="noopener">Talk to ProCircular IR &rarr;</a>
-    <a class="btn" href="https://procircular.com/services/incident-response/" target="_blank" rel="noopener">Our IR Services</a>
+  <div class="action-panel-inner">
+    <div class="ap-eyebrow">Found Your Institution?</div>
+    <h3>Here's what to do in the next 24&ndash;72 hours.</h3>
+    <p class="ap-lede">
+      A name appearing on the leak list is a credible signal that your Canvas tenant
+      may have been compromised. ProCircular's incident-response team has helped dozens
+      of education institutions through breaches like this. Recommended first steps:
+    </p>
+    <ol>
+      <li><strong>Preserve evidence.</strong> <span>Snapshot Canvas audit logs, API access logs, and admin activity. Don't let log retention windows lapse.</span></li>
+      <li><strong>Rotate credentials &amp; tokens.</strong> <span>Force-rotate admin passwords, API tokens, OAuth/LTI keys, and any service-account credentials integrated with Canvas.</span></li>
+      <li><strong>Convene incident counsel.</strong> <span>Engage privacy counsel early &mdash; FERPA, state breach-notification laws (50 different clocks), and student/parent comms have tight timelines.</span></li>
+      <li><strong>Confirm scope with Instructure.</strong> <span>Open a Severity 1 case. Request their forensic findings specific to your tenant, not just the public statement.</span></li>
+      <li><strong>Plan stakeholder comms.</strong> <span>Board, leadership, students, parents, faculty, the press &mdash; sequenced, factual, on your timeline (not the attacker's).</span></li>
+    </ol>
+    <div class="cta-row">
+      <a class="btn primary" href="https://www.procircular.com/contact-us/" target="_blank" rel="noopener">Talk to ProCircular IR &rarr;</a>
+      <a class="btn ghost-light" href="https://www.procircular.com/products-and-services/incident-response/" target="_blank" rel="noopener">Our IR Services</a>
+      <span class="ap-hotline">or call our 24/7 hotline: <a href="tel:+18443977763">844-397-7763</a></span>
+    </div>
   </div>
 </div>
 
 <div class="footer">
   <div class="pc-line">
-    Built and maintained by <a href="https://procircular.com" target="_blank" rel="noopener">ProCircular</a>
+    Built and maintained by <strong><a href="https://www.procircular.com" target="_blank" rel="noopener">ProCircular</a></strong>
     &mdash; an Iowa-based cybersecurity firm specializing in incident response, vCISO, penetration testing,
     and risk assessments for education, healthcare, and finance.
   </div>
   <div>
     Data source: ShinyHunters DLS leak file (publicly posted). List contains
-    <span id="total">0</span> entries. This page is informational and does not host or link
-    to leaked data. If you believe an entry should be removed,
+    <strong id="total">0</strong> entries. This page is informational and does not host or link to
+    leaked data. If you believe an entry should be removed,
     <a href="https://github.com/jrsherlock/canvas-breach/issues" target="_blank" rel="noopener">open an issue</a>.
   </div>
 </div>
