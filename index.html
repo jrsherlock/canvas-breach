@@ -57,8 +57,9 @@
 
   /* ===== Brand bar ===== */
   .brandbar {
-    background: var(--pc-navy);
+    background: #fff;
     border-bottom: 4px solid var(--pc-green);
+    box-shadow: 0 1px 2px rgba(15,36,71,.04);
   }
   .brandbar-inner {
     max-width: 1100px; margin: 0 auto; padding: 18px 20px;
@@ -66,11 +67,12 @@
   }
   .brand { display: flex; align-items: center; text-decoration: none; gap: 12px; }
   .brand:hover { text-decoration: none; }
-  .brand img.logo { height: 38px; width: auto; display: block; }
+  .brand img.logo { height: 56px; width: auto; display: block; }
   .brand .logo-fallback {
-    color: #fff; font-weight: 700; font-size: 22px; letter-spacing: -0.5px;
+    color: var(--pc-navy); font-weight: 700; font-size: 22px; letter-spacing: -0.5px;
     display: none;
   }
+  .brand img.logo.failed { display: none; }
   .brand img.logo.failed + .logo-fallback { display: block; }
   .brand-cta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 
@@ -78,10 +80,12 @@
     display: inline-flex; align-items: center; gap: 6px;
     padding: 10px 18px; font-size: 13px; font-weight: 600;
     border-radius: 999px; border: 2px solid transparent;
-    background: transparent; color: #fff; cursor: pointer;
+    background: transparent; color: var(--pc-navy); cursor: pointer;
     text-decoration: none; transition: all .15s; white-space: nowrap;
     font-family: inherit; line-height: 1.2;
   }
+  .btn.ghost-navy { border-color: var(--pc-navy); color: var(--pc-navy); }
+  .btn.ghost-navy:hover { background: var(--pc-navy); color: #fff; text-decoration: none; }
   .btn.ghost-light { border-color: rgba(255,255,255,.5); color: #fff; }
   .btn.ghost-light:hover { border-color: #fff; background: rgba(255,255,255,.08); text-decoration: none; }
   .btn.primary {
@@ -268,12 +272,12 @@
 <div class="brandbar">
   <div class="brandbar-inner">
     <a class="brand" href="https://www.procircular.com" target="_blank" rel="noopener" aria-label="ProCircular">
-      <img class="logo" src="https://www.procircular.com/wp-content/uploads/2025/04/ProCircular-Logo-White.png"
-        alt="ProCircular" onerror="this.classList.add('failed')">
+      <img class="logo" src="assets/procircular-logo.png"
+        alt="ProCircular &mdash; Security. Privacy. Trust." onerror="this.classList.add('failed')">
       <span class="logo-fallback">ProCircular</span>
     </a>
     <div class="brand-cta">
-      <a class="btn ghost-light" href="https://www.procircular.com/products-and-services/incident-response/" target="_blank" rel="noopener">Incident Response</a>
+      <a class="btn ghost-navy" href="https://www.procircular.com/products-and-services/incident-response/" target="_blank" rel="noopener">Incident Response</a>
       <a class="btn primary" href="https://www.procircular.com/contact-us/" target="_blank" rel="noopener">Contact Us &rarr;</a>
     </div>
   </div>
